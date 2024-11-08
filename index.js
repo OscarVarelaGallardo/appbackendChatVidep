@@ -1,4 +1,3 @@
-// Importaciones necesarias
 import express from 'express';
 import userRoutes from './src/Routes/userRoutes.js';
 import loginRoutes from './src/Routes/loginRoutes.js';
@@ -9,13 +8,13 @@ import { Server } from 'socket.io';
 
 const app = express();
 const port = 3000;
+const portFront = 4000;
+
  app.use(cors({
-    origin: '*', 
- 
+    origin: `http://localhost:${portFront}`,
 }));
+
 const server = http.createServer(app); 
-
-
 const io = new Server(server, {
     cors: {
         origin: "http://localhost:5173", 
@@ -43,7 +42,6 @@ io.on('connection', (socket) => {
     });
 });
 
-// Conexión a la base de datos MySQL
 connection.connect((err) => {
     if (err) {
         console.error('Error de conexión a la base de datos: ', err);
@@ -54,11 +52,9 @@ connection.connect((err) => {
 
 app.use('/api', userRoutes);
 app.use('/api', loginRoutes);
-
 app.use('/test',(req,res)=>{
   return   res.status(200).send({ status: 200, message: 'Pagina testing' });
 })
-
 server.listen(port, () => {
     console.log(`Servidor funcionando en http://localhost:${port}/`);
 });
